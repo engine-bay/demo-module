@@ -1,4 +1,4 @@
-namespace EngineBay.ModuleTemplate
+namespace EngineBay.DemoModule
 {
     // High Performance logging extensions
     // https://learn.microsoft.com/en-us/dotnet/core/extensions/high-performance-logging

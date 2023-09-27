@@ -1,5 +1,5 @@
-# EngineBay.ModuleTemplate
+# EngineBay.DemoModule
 
-[![NuGet version](https://badge.fury.io/nu/EngineBay.ModuleTemplate.svg)](https://badge.fury.io/nu/EngineBay.ModuleTemplate)
+[![NuGet version](https://badge.fury.io/nu/EngineBay.DemoModule.svg)](https://badge.fury.io/nu/EngineBay.DemoModule)
 
-ModuleTemplate module for EngineBay published to [EngineBay.ModuleTemplate](https://www.nuget.org/packages/EngineBay.ModuleTemplate/) on NuGet.
+DemoModule module for EngineBay published to [EngineBay.DemoModule](https://www.nuget.org/packages/EngineBay.DemoModule/) on NuGet.

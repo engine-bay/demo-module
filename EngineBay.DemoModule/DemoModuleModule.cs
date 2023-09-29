@@ -2,21 +2,14 @@ namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
 
-    public class DemoModuleModule : IModule
+    public class DemoModuleModule : BaseModule
     {
-        /// <inheritdoc/>
-        public IServiceCollection RegisterModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection RegisterModule(IServiceCollection services, IConfiguration configuration)
         {
             return services;
         }
 
-        /// <inheritdoc/>
-        public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
-        {
-            return endpoints;
-        }
-
-        public WebApplication AddMiddleware(WebApplication app)
+        public override WebApplication AddMiddleware(WebApplication app)
         {
             return app;
         }

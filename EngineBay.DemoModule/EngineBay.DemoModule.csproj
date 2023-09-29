@@ -27,8 +27,14 @@
     <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
+  <ItemGroup Condition="$(Configuration)=='Debug'">
+    <ProjectReference Include="../../core/EngineBay.Core/EngineBay.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="$(Configuration)!='Debug'">
+    <PackageReference Include="EngineBay.Core" Version="6.1.0" />
+  </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="EngineBay.Core" Version="5.9.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

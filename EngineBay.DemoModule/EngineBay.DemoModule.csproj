@@ -24,23 +24,27 @@
         <AnalysisMode>AllEnabledByDefault</AnalysisMode>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <IsTrimmable>true</IsTrimmable>
+        <IsTrimmable>false</IsTrimmable>
     </PropertyGroup>
 
     <Choose>
         <When Condition="'$(ASPNETCORE_ENVIRONMENT)' == 'Development'">
             <ItemGroup>
                 <ProjectReference Include="../../core/EngineBay.Core/EngineBay.Core.csproj" />
+                <ProjectReference
+                    Include="../../persistence/EngineBay.Persistence/EngineBay.Persistence.csproj" />
             </ItemGroup>
         </When>
         <Otherwise>
             <ItemGroup>
                 <PackageReference Include="EngineBay.Core" Version="7.0.0" />
+                <PackageReference Include="EngineBay.Persistence" Version="4.1.1" />
             </ItemGroup>
         </Otherwise>
     </Choose>
 
     <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.7.1" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>

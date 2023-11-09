@@ -10,9 +10,11 @@ namespace EngineBay.DemoModule
         {
             // Register commands
             services.AddTransient<CreateTodoList>();
+            services.AddTransient<CreateTodoItem>();
 
             // Register validators
             services.AddTransient<IValidator<CreateTodoListDto>, CreateTodoListDtoValidator>();
+            services.AddTransient<IValidator<CreateTodoItemDto>, CreateTodoItemDtoValidator>();
 
             // register persistence services
             var databaseConfiguration = new CQRSDatabaseConfiguration<DemoModuleDbContext, DemoModuleQueryDbContext, DemoModuleWriteDbContext>();

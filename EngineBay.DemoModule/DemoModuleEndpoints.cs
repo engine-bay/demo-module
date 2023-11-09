@@ -1,24 +1,22 @@
 namespace EngineBay.DemoModule
 {
-    using System.Security.Claims;
-    using EngineBay.Core;
-
     public static class DemoModuleEndpoints
     {
         private static readonly string[] TodoListTags = { ApiGroupNameConstants.TodoList };
 
-        private static string basePath = "/todolist";
+        private static string listBasePath = "/todolist";
+        private static string itemBasePath = "/todolist/{listId:guid}/item";
 
         public static void MapEndpoints(RouteGroupBuilder endpoints)
         {
-            endpoints.MapPost(basePath, async (CreateTodoList command, CreateTodoListDto createTodoListDto, CancellationToken cancellation) =>
+            endpoints.MapPost(listBasePath, async (CreateTodoList command, CreateTodoListDto createTodoListDto, CancellationToken cancellation) =>
             {
                 var result = await command.Handle(createTodoListDto, cancellation);
-                return Results.Created($"{basePath}/{result.Id}", result);
+                return Results.Created($"{listBasePath}/{result.Id}", result);
             })
             .WithTags(TodoListTags);
 
-            endpoints.MapGet(basePath + "/{id}", (Guid id, CancellationToken cancellation) =>
+            endpoints.MapGet(listBasePath + "/{id}", (Guid id, CancellationToken cancellation) =>
               {
                   return Results.Ok("todo list");
               })
@@ -32,6 +30,13 @@ namespace EngineBay.DemoModule
             //     })
             //   .RequireAuthorization(ModulePolicies.AdminAuditEntries)
             //   .WithTags(TodoList);
+            endpoints.MapPost(itemBasePath, async (CreateTodoItem command, CreateTodoItemDto createTodoItemDto, Guid listId, CancellationToken cancellation) =>
+            {
+                createTodoItemDto.ListId = listId;
+                var result = await command.Handle(createTodoItemDto, cancellation);
+                return Results.Created($"{listBasePath}/{result.Id}", result);
+            })
+            .WithTags(TodoListTags);
         }
     }
 }

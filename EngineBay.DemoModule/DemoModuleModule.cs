@@ -14,7 +14,7 @@ namespace EngineBay.DemoModule
 
             // Register validators
             services.AddTransient<IValidator<CreateTodoListDto>, CreateTodoListDtoValidator>();
-            services.AddTransient<IValidator<CreateTodoItemDto>, CreateTodoItemDtoValidator>();
+            services.AddTransient<IValidator<CreateTodoItemCommand>, CreateTodoItemDtoValidator>();
 
             // register persistence services
             var databaseConfiguration = new CQRSDatabaseConfiguration<DemoModuleDbContext, DemoModuleQueryDbContext, DemoModuleWriteDbContext>();

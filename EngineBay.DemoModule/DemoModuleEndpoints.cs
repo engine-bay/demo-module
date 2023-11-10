@@ -9,31 +9,34 @@ namespace EngineBay.DemoModule
 
         public static void MapEndpoints(RouteGroupBuilder endpoints)
         {
-            endpoints.MapPost(listBasePath, async (CreateTodoList command, CreateTodoListDto createTodoListDto, CancellationToken cancellation) =>
+            endpoints.MapPost(listBasePath, async (CreateTodoList handler, CreateTodoListDto createTodoListDto, CancellationToken cancellation) =>
             {
-                var result = await command.Handle(createTodoListDto, cancellation);
+                var result = await handler.Handle(createTodoListDto, cancellation);
                 return Results.Created($"{listBasePath}/{result.Id}", result);
             })
             .WithTags(TodoListTags);
 
-            endpoints.MapGet(listBasePath + "/{id}", (Guid id, CancellationToken cancellation) =>
+            endpoints.MapGet(listBasePath, (Guid id, CancellationToken cancellation) =>
               {
                   return Results.Ok("todo list");
               })
               .WithTags(TodoListTags);
 
-            // endpoints.MapGet(
-            //     "/todolist",
-            //     async (int? skip, int? limit, string? sortBy, SortOrderType? sortOrder, string? actionType, DateTime? startDate, DateTime? endDate, ClaimsPrincipal claimsPrincipal, CancellationToken cancellation) =>
-            //     {
-            //         return Results.Ok("todo list");
-            //     })
-            //   .RequireAuthorization(ModulePolicies.AdminAuditEntries)
-            //   .WithTags(TodoList);
-            endpoints.MapPost(itemBasePath, async (CreateTodoItem command, CreateTodoItemDto createTodoItemDto, Guid listId, CancellationToken cancellation) =>
+            endpoints.MapGet(listBasePath + "/{id}", async (GetTodoList handler, Guid id, CancellationToken cancellation) =>
+              {
+                  var result = await handler.Handle(id, cancellation);
+                  return Results.Ok(result);
+              })
+              .WithTags(TodoListTags);
+
+            endpoints.MapPost(itemBasePath, async (CreateTodoItem handler, CreateTodoItemDto createTodoItemDto, Guid listId, CancellationToken cancellation) =>
             {
-                createTodoItemDto.ListId = listId;
-                var result = await command.Handle(createTodoItemDto, cancellation);
+                var command = new CreateTodoItemCommand(createTodoItemDto.Name, listId)
+                {
+                    Description = createTodoItemDto.Description,
+                    DueDate = createTodoItemDto.DueDate,
+                };
+                var result = await handler.Handle(command, cancellation);
                 return Results.Created($"{listBasePath}/{result.Id}", result);
             })
             .WithTags(TodoListTags);

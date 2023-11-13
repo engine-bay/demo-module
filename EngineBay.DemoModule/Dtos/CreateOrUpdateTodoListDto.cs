@@ -1,8 +1,8 @@
 namespace EngineBay.DemoModule
 {
-    public class CreateTodoListDto
+    public class CreateOrUpdateTodoListDto
     {
-        public CreateTodoListDto(string name)
+        public CreateOrUpdateTodoListDto(string name)
         {
             this.Name = name;
         }

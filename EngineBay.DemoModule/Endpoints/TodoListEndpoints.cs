@@ -13,7 +13,7 @@
         {
             endpoints.MapPost(
                 ListBasePath,
-                async (CreateTodoList handler, CreateTodoListDto createTodoListDto, CancellationToken cancellation) =>
+                async (CreateTodoList handler, CreateOrUpdateTodoListDto createTodoListDto, CancellationToken cancellation) =>
                 {
                     var result = await handler.Handle(createTodoListDto, cancellation);
                     return Results.Created($"{ListBasePath}/{result.Id}", result);
@@ -43,11 +43,11 @@
 
             endpoints.MapPut(
                 ListBasePath + "/{id:guid}",
-                async (UpdateTodoList handler, CreateTodoListDto createTodoListDto, Guid id, CancellationToken cancellation) =>
+                async (UpdateTodoList handler, CreateOrUpdateTodoListDto updateTodoListDto, Guid id, CancellationToken cancellation) =>
                 {
-                    var command = new UpdateTodoListCommand(id, createTodoListDto.Name)
+                    var command = new UpdateTodoListCommand(id, updateTodoListDto.Name)
                     {
-                        Description = createTodoListDto.Description,
+                        Description = updateTodoListDto.Description,
                     };
                     var result = await handler.Handle(command, cancellation);
                     return Results.Ok(result);

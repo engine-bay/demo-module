@@ -2,7 +2,7 @@ namespace EngineBay.DemoModule
 {
     using FluentValidation;
 
-    public class CreateTodoListDtoValidator : AbstractValidator<CreateTodoListDto>
+    public class CreateTodoListDtoValidator : AbstractValidator<CreateOrUpdateTodoListDto>
     {
         public CreateTodoListDtoValidator()
         {

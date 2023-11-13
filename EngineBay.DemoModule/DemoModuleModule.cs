@@ -19,7 +19,7 @@ namespace EngineBay.DemoModule
             services.AddTransient<QueryTodoList>();
 
             // Register validators
-            services.AddTransient<IValidator<CreateTodoListDto>, CreateTodoListDtoValidator>();
+            services.AddTransient<IValidator<CreateOrUpdateTodoListDto>, CreateTodoListDtoValidator>();
             services.AddTransient<IValidator<UpdateTodoListCommand>, UpdateTodoListDtoValidator>();
             services.AddTransient<IValidator<CreateTodoItemCommand>, CreateTodoItemDtoValidator>();
 

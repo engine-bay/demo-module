@@ -1,12 +1,11 @@
-namespace EngineBay.DemoModule
+﻿namespace EngineBay.DemoModule.Endpoints
 {
     using EngineBay.Core;
     using EngineBay.DemoModule.Queries;
 
-    public static class DemoModuleEndpoints
+    public static class TodoListEndpoints
     {
-        private const string ListBasePath = "/lists";
-        private const string ItemBasePath = "/lists/{listId:guid}/items";
+        public const string ListBasePath = "/lists";
 
         private static readonly string[] TodoListTags = { ApiGroupNameConstants.TodoList };
 
@@ -52,20 +51,6 @@ namespace EngineBay.DemoModule
                     };
                     var result = await handler.Handle(command, cancellation);
                     return Results.Ok(result);
-                })
-                .WithTags(TodoListTags);
-
-            endpoints.MapPost(
-                ItemBasePath,
-                async (CreateTodoItem handler, CreateTodoItemDto createTodoItemDto, Guid listId, CancellationToken cancellation) =>
-                {
-                    var command = new CreateTodoItemCommand(createTodoItemDto.Name, listId)
-                    {
-                        Description = createTodoItemDto.Description,
-                        DueDate = createTodoItemDto.DueDate,
-                    };
-                    var result = await handler.Handle(command, cancellation);
-                    return Results.Created($"{ListBasePath}/{result.Id}", result);
                 })
                 .WithTags(TodoListTags);
         }

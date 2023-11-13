@@ -1,6 +1,7 @@
 namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
+    using EngineBay.DemoModule.Endpoints;
     using EngineBay.Persistence;
     using FluentValidation;
 
@@ -30,7 +31,8 @@ namespace EngineBay.DemoModule
 
         public override RouteGroupBuilder MapEndpoints(RouteGroupBuilder endpoints)
         {
-            DemoModuleEndpoints.MapEndpoints(endpoints);
+            TodoListEndpoints.MapEndpoints(endpoints);
+            TodoItemEndpoints.MapEndpoints(endpoints);
             return endpoints;
         }
 

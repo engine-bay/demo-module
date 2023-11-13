@@ -24,8 +24,6 @@ namespace EngineBay.DemoModule
 
         public string? Description { get; set; }
 
-        public DateTimeOffset? CompletedDate { get; set; }
-
         public DateTimeOffset? DueDate { get; set; }
 
         public static new void CreateDataAnnotations(ModelBuilder modelBuilder)
@@ -50,6 +48,10 @@ namespace EngineBay.DemoModule
             modelBuilder.Entity<TodoItem>().HasOne(x => x.List).WithMany().HasForeignKey(x => x.ListId);
 
             modelBuilder.Entity<TodoItem>().Property(x => x.Completed).IsRequired();
+
+            modelBuilder.Entity<TodoItem>().Property(x => x.Description);
+
+            modelBuilder.Entity<TodoItem>().Property(x => x.DueDate);
         }
     }
 }

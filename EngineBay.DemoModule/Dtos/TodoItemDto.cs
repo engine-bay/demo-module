@@ -14,7 +14,6 @@ namespace EngineBay.DemoModule
             this.List = todoItem.List;
             this.Completed = todoItem.Completed;
             this.Description = todoItem.Description;
-            this.CompletedDate = todoItem.CompletedDate;
             this.DueDate = todoItem.DueDate;
         }
 
@@ -29,8 +28,6 @@ namespace EngineBay.DemoModule
         public bool Completed { get; set; }
 
         public string? Description { get; set; }
-
-        public DateTimeOffset? CompletedDate { get; set; }
 
         public DateTimeOffset? DueDate { get; set; }
     }

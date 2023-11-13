@@ -11,8 +11,6 @@ namespace EngineBay.DemoModule
 
         public string? Description { get; set; }
 
-        public DateTimeOffset? CompletedDate { get; set; }
-
         public DateTimeOffset? DueDate { get; set; }
     }
 }

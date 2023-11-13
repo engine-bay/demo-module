@@ -7,6 +7,11 @@ namespace EngineBay.DemoModule
 
     public class TodoList : BaseModel
     {
+        public TodoList()
+        {
+            this.Name = string.Empty;
+        }
+
         public TodoList(string name)
         {
             this.Name = name;
@@ -32,6 +37,8 @@ namespace EngineBay.DemoModule
             modelBuilder.Entity<TodoList>().Property(x => x.LastUpdatedAt).IsRequired();
 
             modelBuilder.Entity<TodoList>().Property(x => x.Name).IsRequired();
+
+            modelBuilder.Entity<TodoList>().Property(x => x.Description);
         }
     }
 }

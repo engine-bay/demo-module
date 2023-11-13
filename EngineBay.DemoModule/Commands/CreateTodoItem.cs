@@ -31,7 +31,7 @@ namespace EngineBay.DemoModule
                 DueDate = createTodoItemDto.DueDate,
             };
 
-            this.demoModuleDb.TodoItems.Add(todoItem);
+            await this.demoModuleDb.TodoItems.AddAsync(todoItem, cancellation);
             await this.demoModuleDb.SaveChangesAsync(cancellation);
 
             return new TodoItemDto(todoItem);

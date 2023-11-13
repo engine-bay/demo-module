@@ -8,6 +8,12 @@ namespace EngineBay.DemoModule
             this.ListId = listId;
         }
 
+        public CreateTodoItemCommand()
+        {
+            this.Name = string.Empty;
+            this.ListId = Guid.Empty;
+        }
+
         public string Name { get; set; }
 
         public Guid ListId { get; set; }

@@ -1,6 +1,5 @@
 namespace EngineBay.DemoModule
 {
-    using System.Security.Claims;
     using EngineBay.Core;
     using FluentValidation;
 
@@ -31,7 +30,7 @@ namespace EngineBay.DemoModule
                 Description = createTodoListDto.Description,
             };
 
-            this.demoModuleDb.TodoLists.Add(todoList);
+            await this.demoModuleDb.TodoLists.AddAsync(todoList, cancellation);
             await this.demoModuleDb.SaveChangesAsync(cancellation);
 
             return new TodoListDto(todoList);

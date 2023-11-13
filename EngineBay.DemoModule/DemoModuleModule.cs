@@ -10,10 +10,16 @@ namespace EngineBay.DemoModule
         {
             // Register commands
             services.AddTransient<CreateTodoList>();
+            services.AddTransient<UpdateTodoList>();
             services.AddTransient<CreateTodoItem>();
+
+            // Register queries
+            services.AddTransient<GetTodoList>();
+            services.AddTransient<QueryTodoList>();
 
             // Register validators
             services.AddTransient<IValidator<CreateTodoListDto>, CreateTodoListDtoValidator>();
+            services.AddTransient<IValidator<UpdateTodoListCommand>, UpdateTodoListDtoValidator>();
             services.AddTransient<IValidator<CreateTodoItemCommand>, CreateTodoItemDtoValidator>();
 
             // register persistence services

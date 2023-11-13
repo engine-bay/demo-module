@@ -23,7 +23,7 @@ namespace EngineBay.DemoModule
 
         public Guid ListId { get; set; }
 
-        public virtual TodoList? List { get; set; }
+        public TodoList? List { get; set; }
 
         public bool Completed { get; set; }
 

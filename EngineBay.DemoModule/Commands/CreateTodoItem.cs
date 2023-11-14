@@ -3,20 +3,20 @@ namespace EngineBay.DemoModule
     using EngineBay.Core;
     using FluentValidation;
 
-    public class CreateTodoItem : ICommandHandler<CreateTodoItemCommand, TodoItemDto>
+    public class CreateTodoItem : ICommandHandler<CreateTodoItemDto, TodoItemDto>
     {
         private readonly DemoModuleWriteDbContext demoModuleDb;
-        private readonly IValidator<CreateTodoItemCommand> validator;
+        private readonly IValidator<CreateTodoItemDto> validator;
 
         public CreateTodoItem(
             DemoModuleWriteDbContext demoModuleDb,
-            IValidator<CreateTodoItemCommand> validator)
+            IValidator<CreateTodoItemDto> validator)
         {
             this.demoModuleDb = demoModuleDb;
             this.validator = validator;
         }
 
-        public async Task<TodoItemDto> Handle(CreateTodoItemCommand createTodoItemDto, CancellationToken cancellation)
+        public async Task<TodoItemDto> Handle(CreateTodoItemDto createTodoItemDto, CancellationToken cancellation)
         {
             if (createTodoItemDto is null)
             {

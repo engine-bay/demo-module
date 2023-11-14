@@ -1,6 +1,7 @@
 namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
+    using EngineBay.DemoModule.Endpoints;
     using EngineBay.Persistence;
     using FluentValidation;
 
@@ -10,9 +11,17 @@ namespace EngineBay.DemoModule
         {
             // Register commands
             services.AddTransient<CreateTodoList>();
+            services.AddTransient<UpdateTodoList>();
+            services.AddTransient<CreateTodoItem>();
+
+            // Register queries
+            services.AddTransient<GetTodoList>();
+            services.AddTransient<QueryTodoList>();
 
             // Register validators
-            services.AddTransient<IValidator<CreateTodoListDto>, CreateTodoListDtoValidator>();
+            services.AddTransient<IValidator<CreateOrUpdateTodoListDto>, CreateTodoListDtoValidator>();
+            services.AddTransient<IValidator<UpdateTodoListCommand>, UpdateTodoListDtoValidator>();
+            services.AddTransient<IValidator<CreateTodoItemDto>, CreateTodoItemDtoValidator>();
 
             // register persistence services
             var databaseConfiguration = new CQRSDatabaseConfiguration<DemoModuleDbContext, DemoModuleQueryDbContext, DemoModuleWriteDbContext>();
@@ -22,7 +31,8 @@ namespace EngineBay.DemoModule
 
         public override RouteGroupBuilder MapEndpoints(RouteGroupBuilder endpoints)
         {
-            DemoModuleEndpoints.MapEndpoints(endpoints);
+            TodoListEndpoints.MapEndpoints(endpoints);
+            TodoItemEndpoints.MapEndpoints(endpoints);
             return endpoints;
         }
 

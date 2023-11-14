@@ -1,23 +1,22 @@
 namespace EngineBay.DemoModule
 {
-    using System.Security.Claims;
     using EngineBay.Core;
     using FluentValidation;
 
-    public class CreateTodoList : ICommandHandler<CreateTodoListDto, TodoListDto>
+    public class CreateTodoList : ICommandHandler<CreateOrUpdateTodoListDto, TodoListDto>
     {
         private readonly DemoModuleWriteDbContext demoModuleDb;
-        private readonly IValidator<CreateTodoListDto> validator;
+        private readonly IValidator<CreateOrUpdateTodoListDto> validator;
 
         public CreateTodoList(
             DemoModuleWriteDbContext demoModuleDb,
-            IValidator<CreateTodoListDto> validator)
+            IValidator<CreateOrUpdateTodoListDto> validator)
         {
             this.demoModuleDb = demoModuleDb;
             this.validator = validator;
         }
 
-        public async Task<TodoListDto> Handle(CreateTodoListDto createTodoListDto, CancellationToken cancellation)
+        public async Task<TodoListDto> Handle(CreateOrUpdateTodoListDto createTodoListDto, CancellationToken cancellation)
         {
             if (createTodoListDto is null)
             {
@@ -31,7 +30,7 @@ namespace EngineBay.DemoModule
                 Description = createTodoListDto.Description,
             };
 
-            this.demoModuleDb.TodoLists.Add(todoList);
+            await this.demoModuleDb.TodoLists.AddAsync(todoList, cancellation);
             await this.demoModuleDb.SaveChangesAsync(cancellation);
 
             return new TodoListDto(todoList);

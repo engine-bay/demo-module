@@ -12,6 +12,8 @@ namespace EngineBay.DemoModule
 
         public DbSet<TodoList> TodoLists { get; set; } = null!;
 
+        public DbSet<TodoItem> TodoItems { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             TodoList.CreateDataAnnotations(modelBuilder);

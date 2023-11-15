@@ -8,35 +8,30 @@
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
 
-    public class QueryTodoItem : PaginatedQuery<TodoItem>, IQueryHandler<QueryTodoItemRequest, PaginatedDto<TodoItemDto>>
+    public class QueryTodoItem : PaginatedQuery<TodoItem>, IQueryHandler<PaginationParameters, PaginatedDto<TodoItemDto>>
     {
-        private readonly DemoModuleDbContext dbContext;
+        private readonly DemoModuleQueryDbContext dbContext;
 
-        public QueryTodoItem(DemoModuleDbContext dbContext)
+        public QueryTodoItem(DemoModuleQueryDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        public async Task<PaginatedDto<TodoItemDto>> Handle(QueryTodoItemRequest query, CancellationToken cancellation)
+        public async Task<PaginatedDto<TodoItemDto>> Handle(PaginationParameters query, CancellationToken cancellation)
         {
             if (query is null)
             {
                 throw new ArgumentNullException(nameof(query));
             }
 
-            if (query.PaginationParameters is null)
-            {
-                throw new ArgumentException(nameof(query.PaginationParameters) + " is null");
-            }
-
             var items = this.dbContext.TodoItems.AsExpandable();
 
-            var limit = query.PaginationParameters.Limit;
-            var skip = limit > 0 ? query.PaginationParameters.Skip : 0;
+            var limit = query.Limit;
+            var skip = limit > 0 ? query.Skip : 0;
             var total = await items.CountAsync(cancellation);
             var format = new DateTimeFormatInfo();
 
-            Expression<Func<TodoItem, string?>> sortByPredicate = query.PaginationParameters.SortBy switch
+            Expression<Func<TodoItem, string?>> sortByPredicate = query.SortBy switch
             {
                 nameof(TodoItem.Id) => todoList => todoList.Id.ToString(),
                 nameof(TodoItem.Name) => todoList => todoList.Name,
@@ -45,11 +40,11 @@
                 nameof(TodoItem.DueDate) => todoList => todoList.DueDate == null ? string.Empty : todoList.DueDate.ToString(),
                 nameof(TodoItem.CreatedAt) => todoList => todoList.CreatedAt.ToString(format),
                 nameof(TodoItem.LastUpdatedAt) => todoList => todoList.LastUpdatedAt.ToString(format),
-                _ => throw new ArgumentException($"TodoItem SortBy type {query.PaginationParameters.SortBy} not found"),
+                _ => throw new ArgumentException($"TodoItem SortBy type {query.SortBy} not found"),
             };
 
-            items = this.Sort(items, sortByPredicate, query.PaginationParameters);
-            items = this.Paginate(items, query.PaginationParameters);
+            items = this.Sort(items, sortByPredicate, query);
+            items = this.Paginate(items, query);
 
             var todoLists = limit > 0 ? await items.ToListAsync(cancellation) : new List<TodoItem>();
 

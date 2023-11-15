@@ -24,9 +24,8 @@
                 async (QueryTodoList query, int? skip, int? limit, string? sortBy, SortOrderType? sortOrder, CancellationToken cancellation) =>
                 {
                     var paginationParameters = new PaginationParameters(skip, limit, sortBy, sortOrder);
-                    var queryTodoListRequest = new QueryTodoListRequest(paginationParameters);
 
-                    var paginatedDtos = await query.Handle(queryTodoListRequest, cancellation);
+                    var paginatedDtos = await query.Handle(paginationParameters, cancellation);
                     return Results.Ok(paginatedDtos);
                 })
                 .WithTags(TodoListTags);

@@ -4,8 +4,9 @@ namespace EngineBay.DemoModule
     using EngineBay.DemoModule.Endpoints;
     using EngineBay.Persistence;
     using FluentValidation;
+    using Microsoft.EntityFrameworkCore;
 
-    public class DemoModuleModule : BaseModule
+    public class DemoModuleModule : BaseModule, IDatabaseModule
     {
         public override IServiceCollection RegisterModule(IServiceCollection services, IConfiguration configuration)
         {
@@ -45,6 +46,11 @@ namespace EngineBay.DemoModule
         public override WebApplication AddMiddleware(WebApplication app)
         {
             return app;
+        }
+
+        public IReadOnlyCollection<IModuleDbContext> GetRegisteredDbContexts(DbContextOptions<ModuleWriteDbContext> dbOptions)
+        {
+            return new IModuleDbContext[] { new DemoModuleDbContext(dbOptions) };
         }
     }
 }

@@ -2,9 +2,9 @@
 {
     using EngineBay.Core;
 
-    public class QueryTodoListRequest
+    public class QueryTodoItemRequest
     {
-        public QueryTodoListRequest(PaginationParameters paginationParameters)
+        public QueryTodoItemRequest(PaginationParameters paginationParameters)
         {
             this.PaginationParameters = paginationParameters;
         }

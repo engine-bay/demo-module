@@ -1,5 +1,7 @@
 namespace EngineBay.DemoModule
 {
+    using System.Collections.Immutable;
+
     public class TodoListDto
     {
         public TodoListDto(TodoList todoList)
@@ -11,13 +13,16 @@ namespace EngineBay.DemoModule
 
             this.Id = todoList.Id;
             this.Name = todoList.Name;
-            this.Description = todoList.Description ?? string.Empty;
+            this.Description = todoList.Description;
+            this.TodoItems = todoList.TodoItems?.Select(x => new TodoItemDto(x)).ToImmutableList();
         }
 
         public Guid Id { get; set; }
 
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
+
+        public ImmutableList<TodoItemDto>? TodoItems { get; set; }
     }
 }

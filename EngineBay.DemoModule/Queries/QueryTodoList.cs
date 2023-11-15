@@ -5,7 +5,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EngineBay.Core;
-    using EngineBay.DemoModule.Queries;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
 

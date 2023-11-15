@@ -1,7 +1,6 @@
 ﻿namespace EngineBay.DemoModule.Endpoints
 {
     using EngineBay.Core;
-    using EngineBay.DemoModule.Queries;
 
     public static class TodoListEndpoints
     {
@@ -50,6 +49,15 @@
                         Description = updateTodoListDto.Description,
                     };
                     var result = await handler.Handle(command, cancellation);
+                    return Results.Ok(result);
+                })
+                .WithTags(TodoListTags);
+
+            endpoints.MapDelete(
+                ListBasePath + "/{id:guid}",
+                async (DeleteTodoList handler, Guid id, CancellationToken cancellation) =>
+                {
+                    var result = await handler.Handle(id, cancellation);
                     return Results.Ok(result);
                 })
                 .WithTags(TodoListTags);

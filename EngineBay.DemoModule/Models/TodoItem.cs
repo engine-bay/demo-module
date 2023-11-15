@@ -18,8 +18,6 @@ namespace EngineBay.DemoModule
 
         public Guid ListId { get; set; }
 
-        public virtual TodoList? List { get; set; }
-
         public bool Completed { get; set; }
 
         public string? Description { get; set; }
@@ -44,8 +42,6 @@ namespace EngineBay.DemoModule
             modelBuilder.Entity<TodoItem>().Property(x => x.Name).IsRequired();
 
             modelBuilder.Entity<TodoItem>().Property(x => x.ListId).IsRequired();
-
-            modelBuilder.Entity<TodoItem>().HasOne(x => x.List).WithMany().HasForeignKey(x => x.ListId);
 
             modelBuilder.Entity<TodoItem>().Property(x => x.Completed).IsRequired();
 

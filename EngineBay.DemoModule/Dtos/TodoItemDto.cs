@@ -9,9 +9,9 @@ namespace EngineBay.DemoModule
                 throw new ArgumentNullException(nameof(todoItem));
             }
 
+            this.Id = todoItem.Id;
             this.Name = todoItem.Name;
             this.ListId = todoItem.ListId;
-            this.List = todoItem.List;
             this.Completed = todoItem.Completed;
             this.Description = todoItem.Description;
             this.DueDate = todoItem.DueDate;
@@ -22,8 +22,6 @@ namespace EngineBay.DemoModule
         public string Name { get; set; }
 
         public Guid ListId { get; set; }
-
-        public TodoList? List { get; set; }
 
         public bool Completed { get; set; }
 

@@ -21,6 +21,8 @@ namespace EngineBay.DemoModule
 
         public string? Description { get; set; }
 
+        public ICollection<TodoItem>? TodoItems { get; set; }
+
         public static new void CreateDataAnnotations(ModelBuilder modelBuilder)
         {
             if (modelBuilder is null)
@@ -39,6 +41,8 @@ namespace EngineBay.DemoModule
             modelBuilder.Entity<TodoList>().Property(x => x.Name).IsRequired();
 
             modelBuilder.Entity<TodoList>().Property(x => x.Description);
+
+            modelBuilder.Entity<TodoList>().HasMany(x => x.TodoItems).WithOne().HasForeignKey(x => x.ListId);
         }
     }
 }

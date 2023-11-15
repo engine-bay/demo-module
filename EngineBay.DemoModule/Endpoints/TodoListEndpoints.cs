@@ -1,7 +1,6 @@
 ﻿namespace EngineBay.DemoModule.Endpoints
 {
     using EngineBay.Core;
-    using EngineBay.DemoModule.Queries;
 
     public static class TodoListEndpoints
     {
@@ -25,9 +24,8 @@
                 async (QueryTodoList query, int? skip, int? limit, string? sortBy, SortOrderType? sortOrder, CancellationToken cancellation) =>
                 {
                     var paginationParameters = new PaginationParameters(skip, limit, sortBy, sortOrder);
-                    var queryTodoListRequest = new QueryTodoListRequest(paginationParameters);
 
-                    var paginatedDtos = await query.Handle(queryTodoListRequest, cancellation);
+                    var paginatedDtos = await query.Handle(paginationParameters, cancellation);
                     return Results.Ok(paginatedDtos);
                 })
                 .WithTags(TodoListTags);
@@ -50,6 +48,15 @@
                         Description = updateTodoListDto.Description,
                     };
                     var result = await handler.Handle(command, cancellation);
+                    return Results.Ok(result);
+                })
+                .WithTags(TodoListTags);
+
+            endpoints.MapDelete(
+                ListBasePath + "/{id:guid}",
+                async (DeleteTodoList handler, Guid id, CancellationToken cancellation) =>
+                {
+                    var result = await handler.Handle(id, cancellation);
                     return Results.Ok(result);
                 })
                 .WithTags(TodoListTags);

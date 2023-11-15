@@ -17,6 +17,7 @@ namespace EngineBay.DemoModule
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             TodoList.CreateDataAnnotations(modelBuilder);
+            TodoItem.CreateDataAnnotations(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
         }

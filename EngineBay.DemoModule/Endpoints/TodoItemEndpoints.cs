@@ -21,11 +21,11 @@
 
             endpoints.MapGet(
                 ItemBasePath,
-                async (QueryTodoItem handler, int? skip, int? limit, string? sortBy, SortOrderType? sortOrder, CancellationToken cancellation) =>
+                async (QueryTodoItem handler, int? skip, int? limit, string? sortBy, SortOrderType? sortOrder, string?[] filters, CancellationToken cancellation) =>
                 {
-                    var paginationParameters = new PaginationParameters(skip, limit, sortBy, sortOrder);
+                    var dynamicFilteredPaginationParameters = new DynamicFilteredPaginationParameters(skip, limit, sortBy, sortOrder, filters);
 
-                    var paginatedDtos = await handler.Handle(paginationParameters, cancellation);
+                    var paginatedDtos = await handler.Handle(dynamicFilteredPaginationParameters, cancellation);
                     return Results.Ok(paginatedDtos);
                 })
                 .WithTags(TodoItemTags);

@@ -8,7 +8,7 @@
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
 
-    public class QueryTodoList : PaginatedQuery<TodoList>, IQueryHandler<PaginationParameters, PaginatedDto<TodoListDto>>
+    public class QueryTodoList : PaginatedQuery<TodoList>, IQueryHandler<DynamicFilteredPaginationParameters, PaginatedDto<TodoListDto>>
     {
         private readonly DemoModuleQueryDbContext dbContext;
 
@@ -17,7 +17,7 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<PaginatedDto<TodoListDto>> Handle(PaginationParameters query, CancellationToken cancellation)
+        public async Task<PaginatedDto<TodoListDto>> Handle(DynamicFilteredPaginationParameters query, CancellationToken cancellation)
         {
             if (query is null)
             {
@@ -25,11 +25,33 @@
             }
 
             var lists = this.dbContext.TodoLists.AsExpandable();
+            var format = new DateTimeFormatInfo();
+
+            foreach (var filter in query.Filters)
+            {
+                var parameter = Expression.Parameter(typeof(TodoList));
+
+                Expression<Func<TodoList, bool>> filterPredicate = filter.Field switch
+                {
+                    nameof(TodoList.Id) =>
+                        filter.CreateFilterPredicate<TodoList>(parameter, Expression.Property(parameter, nameof(TodoList.Id)), Expression.Constant(Guid.Parse(filter.Value))),
+                    nameof(TodoList.Name) =>
+                        filter.CreateFilterPredicate<TodoList>(parameter, Expression.Property(parameter, nameof(TodoList.Name)), Expression.Constant(filter.Value)),
+                    nameof(TodoList.Description) =>
+                        filter.CreateFilterPredicate<TodoList>(parameter, Expression.Property(parameter, nameof(TodoList.Description)), Expression.Constant(filter.Value)),
+                    nameof(TodoList.CreatedAt) =>
+                        filter.CreateFilterPredicate<TodoList>(parameter, Expression.Property(parameter, nameof(TodoList.CreatedAt)), Expression.Constant(DateTime.Parse(filter.Value, format))),
+                    nameof(TodoList.LastUpdatedAt) =>
+                        filter.CreateFilterPredicate<TodoList>(parameter, Expression.Property(parameter, nameof(TodoList.LastUpdatedAt)), Expression.Constant(DateTime.Parse(filter.Value, format))),
+                    _ => throw new ArgumentException($"TodoList Filter type {filter.Field} not found"),
+                };
+
+                lists = lists.Where(filterPredicate);
+            }
 
             var limit = query.Limit;
             var skip = limit > 0 ? query.Skip : 0;
             var total = await lists.CountAsync(cancellation);
-            var format = new DateTimeFormatInfo();
 
             Expression<Func<TodoList, string?>> sortByPredicate = query.SortBy switch
             {

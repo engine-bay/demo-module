@@ -19,10 +19,7 @@
 
         public async Task<PaginatedDto<TodoItemDto>> Handle(DynamicFilteredPaginationParameters query, CancellationToken cancellation)
         {
-            if (query is null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
+            ArgumentNullException.ThrowIfNull(query);
 
             var items = this.dbContext.TodoItems.AsExpandable();
             var format = new DateTimeFormatInfo();

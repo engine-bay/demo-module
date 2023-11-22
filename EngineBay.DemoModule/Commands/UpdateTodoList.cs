@@ -18,10 +18,7 @@ namespace EngineBay.DemoModule
 
         public async Task<TodoListDto> Handle(UpdateTodoListCommand updateTodoListCommand, CancellationToken cancellation)
         {
-            if (updateTodoListCommand is null)
-            {
-                throw new ArgumentNullException(nameof(updateTodoListCommand));
-            }
+            ArgumentNullException.ThrowIfNull(updateTodoListCommand);
 
             this.validator.ValidateAndThrow(updateTodoListCommand);
 

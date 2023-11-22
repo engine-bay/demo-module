@@ -1,4 +1,4 @@
-﻿namespace EngineBay.DemoModule.Endpoints
+﻿namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
 

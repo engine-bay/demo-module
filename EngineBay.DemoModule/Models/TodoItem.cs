@@ -22,14 +22,11 @@ namespace EngineBay.DemoModule
 
         public string? Description { get; set; }
 
-        public DateTimeOffset? DueDate { get; set; }
+        public DateTime? DueDate { get; set; }
 
         public static new void CreateDataAnnotations(ModelBuilder modelBuilder)
         {
-            if (modelBuilder is null)
-            {
-                throw new ArgumentNullException(nameof(modelBuilder));
-            }
+            ArgumentNullException.ThrowIfNull(modelBuilder);
 
             modelBuilder.Entity<TodoItem>().ToTable(typeof(TodoItem).Name.Pluralize());
 

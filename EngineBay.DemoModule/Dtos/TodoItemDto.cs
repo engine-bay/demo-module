@@ -4,10 +4,7 @@ namespace EngineBay.DemoModule
     {
         public TodoItemDto(TodoItem todoItem)
         {
-            if (todoItem is null)
-            {
-                throw new ArgumentNullException(nameof(todoItem));
-            }
+            ArgumentNullException.ThrowIfNull(todoItem);
 
             this.Id = todoItem.Id;
             this.Name = todoItem.Name;

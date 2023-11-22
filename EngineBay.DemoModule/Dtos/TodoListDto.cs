@@ -6,10 +6,7 @@ namespace EngineBay.DemoModule
     {
         public TodoListDto(TodoList todoList)
         {
-            if (todoList is null)
-            {
-                throw new ArgumentNullException(nameof(todoList));
-            }
+            ArgumentNullException.ThrowIfNull(todoList);
 
             this.Id = todoList.Id;
             this.Name = todoList.Name;

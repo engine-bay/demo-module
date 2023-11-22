@@ -8,7 +8,7 @@
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
 
-    public class QueryTodoItem : PaginatedQuery<TodoItem>, IQueryHandler<PaginationParameters, PaginatedDto<TodoItemDto>>
+    public class QueryTodoItem : PaginatedQuery<TodoItem>, IQueryHandler<DynamicFilteredPaginationParameters, PaginatedDto<TodoItemDto>>
     {
         private readonly DemoModuleQueryDbContext dbContext;
 
@@ -17,39 +17,65 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<PaginatedDto<TodoItemDto>> Handle(PaginationParameters query, CancellationToken cancellation)
+        public async Task<PaginatedDto<TodoItemDto>> Handle(DynamicFilteredPaginationParameters query, CancellationToken cancellation)
         {
-            if (query is null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
+            ArgumentNullException.ThrowIfNull(query);
 
             var items = this.dbContext.TodoItems.AsExpandable();
+            var format = new DateTimeFormatInfo();
+
+            foreach (var filter in query.Filters)
+            {
+                var parameter = Expression.Parameter(typeof(TodoItem));
+
+                Expression<Func<TodoItem, bool>> filterPredicate = filter.Field switch
+                {
+                    nameof(TodoItem.Id) =>
+                        filter.CreateFilterPredicate<TodoItem>(parameter, Expression.Property(parameter, nameof(TodoItem.Id)), Expression.Constant(Guid.Parse(filter.Value))),
+                    nameof(TodoItem.Name) =>
+                        filter.CreateFilterPredicate<TodoItem>(parameter, Expression.Property(parameter, nameof(TodoItem.Name)), Expression.Constant(filter.Value)),
+                    nameof(TodoItem.ListId) =>
+                        filter.CreateFilterPredicate<TodoItem>(parameter, Expression.Property(parameter, nameof(TodoItem.ListId)), Expression.Constant(Guid.Parse(filter.Value))),
+                    nameof(TodoItem.Description) =>
+                        filter.CreateFilterPredicate<TodoItem>(parameter, Expression.Property(parameter, nameof(TodoItem.Description)), Expression.Constant(filter.Value)),
+                    nameof(TodoItem.Completed) =>
+                        filter.CreateFilterPredicate<TodoItem>(parameter, Expression.Property(parameter, nameof(TodoItem.Completed)), Expression.Constant(bool.Parse(filter.Value))),
+                    nameof(TodoItem.DueDate) =>
+                        filter.CreateFilterPredicate<TodoItem>(parameter, Expression.Property(parameter, nameof(TodoItem.DueDate)), Expression.Constant(DateTime.Parse(filter.Value, format))),
+                    nameof(TodoItem.CreatedAt) =>
+                        filter.CreateFilterPredicate<TodoItem>(parameter, Expression.Property(parameter, nameof(TodoItem.CreatedAt)), Expression.Constant(DateTime.Parse(filter.Value, format))),
+                    nameof(TodoItem.LastUpdatedAt) =>
+                        filter.CreateFilterPredicate<TodoItem>(parameter, Expression.Property(parameter, nameof(TodoItem.LastUpdatedAt)), Expression.Constant(DateTime.Parse(filter.Value, format))),
+                    _ => throw new ArgumentException($"TodoItem Filter type {filter.Field} not found"),
+                };
+
+                items = items.Where(filterPredicate);
+            }
 
             var limit = query.Limit;
             var skip = limit > 0 ? query.Skip : 0;
             var total = await items.CountAsync(cancellation);
-            var format = new DateTimeFormatInfo();
 
             Expression<Func<TodoItem, string?>> sortByPredicate = query.SortBy switch
             {
-                nameof(TodoItem.Id) => todoList => todoList.Id.ToString(),
-                nameof(TodoItem.Name) => todoList => todoList.Name,
-                nameof(TodoItem.Description) => todoList => todoList.Description,
-                nameof(TodoItem.Completed) => todoList => todoList.Completed.ToString(),
-                nameof(TodoItem.DueDate) => todoList => todoList.DueDate == null ? string.Empty : todoList.DueDate.ToString(),
-                nameof(TodoItem.CreatedAt) => todoList => todoList.CreatedAt.ToString(format),
-                nameof(TodoItem.LastUpdatedAt) => todoList => todoList.LastUpdatedAt.ToString(format),
+                nameof(TodoItem.Id) => todoItem => todoItem.Id.ToString(),
+                nameof(TodoItem.Name) => todoItem => todoItem.Name,
+                nameof(TodoItem.ListId) => todoItem => todoItem.ListId.ToString(),
+                nameof(TodoItem.Description) => todoItem => todoItem.Description,
+                nameof(TodoItem.Completed) => todoItem => todoItem.Completed.ToString(),
+                nameof(TodoItem.DueDate) => todoItem => todoItem.DueDate == null ? string.Empty : todoItem.DueDate.ToString(),
+                nameof(TodoItem.CreatedAt) => todoItem => todoItem.CreatedAt.ToString(format),
+                nameof(TodoItem.LastUpdatedAt) => todoItem => todoItem.LastUpdatedAt.ToString(format),
                 _ => throw new ArgumentException($"TodoItem SortBy type {query.SortBy} not found"),
             };
 
             items = this.Sort(items, sortByPredicate, query);
             items = this.Paginate(items, query);
 
-            var todoLists = limit > 0 ? await items.ToListAsync(cancellation) : new List<TodoItem>();
+            var todoItems = limit > 0 ? await items.ToListAsync(cancellation) : new List<TodoItem>();
 
-            var todoListDtos = todoLists.Select(todoList => new TodoItemDto(todoList));
-            return new PaginatedDto<TodoItemDto>(total, skip, limit, todoListDtos);
+            var todoItemDtos = todoItems.Select(todoItem => new TodoItemDto(todoItem));
+            return new PaginatedDto<TodoItemDto>(total, skip, limit, todoItemDtos);
         }
     }
 }

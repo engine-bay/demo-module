@@ -1,7 +1,6 @@
 namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
-    using EngineBay.DemoModule.Endpoints;
     using EngineBay.Persistence;
     using FluentValidation;
     using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-﻿namespace EngineBay.DemoModule.Endpoints
+﻿namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
 
@@ -21,9 +21,9 @@
 
             endpoints.MapGet(
                 ListBasePath,
-                async (QueryTodoList query, int? skip, int? limit, string? sortBy, SortOrderType? sortOrder, CancellationToken cancellation) =>
+                async (QueryTodoList query, int? skip, int? limit, string? sortBy, SortOrderType? sortOrder, string?[] filters, CancellationToken cancellation) =>
                 {
-                    var paginationParameters = new PaginationParameters(skip, limit, sortBy, sortOrder);
+                    var paginationParameters = new DynamicFilteredPaginationParameters(skip, limit, sortBy, sortOrder, filters);
 
                     var paginatedDtos = await query.Handle(paginationParameters, cancellation);
                     return Results.Ok(paginatedDtos);

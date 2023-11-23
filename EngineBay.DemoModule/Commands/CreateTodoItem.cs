@@ -18,10 +18,7 @@ namespace EngineBay.DemoModule
 
         public async Task<TodoItemDto> Handle(CreateTodoItemDto createTodoItemDto, CancellationToken cancellation)
         {
-            if (createTodoItemDto is null)
-            {
-                throw new ArgumentNullException(nameof(createTodoItemDto));
-            }
+            ArgumentNullException.ThrowIfNull(createTodoItemDto);
 
             this.validator.ValidateAndThrow(createTodoItemDto);
 

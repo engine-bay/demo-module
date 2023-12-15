@@ -39,6 +39,7 @@ namespace EngineBay.DemoModule
         {
             TodoListEndpoints.MapEndpoints(endpoints);
             TodoItemEndpoints.MapEndpoints(endpoints);
+            RateLimitingEndpoints.MapEndpoints(endpoints);
             return endpoints;
         }
 

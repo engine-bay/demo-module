@@ -37,14 +37,14 @@
         </When>
         <Otherwise>
             <ItemGroup>
-                <PackageReference Include="EngineBay.Core" Version="9.0.4" />
-                <PackageReference Include="EngineBay.Persistence" Version="6.0.4" />
+                <PackageReference Include="EngineBay.Core" Version="*" />
+                <PackageReference Include="EngineBay.Persistence" Version="*" />
             </ItemGroup>
         </Otherwise>
     </Choose>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="11.8.1" />
+        <PackageReference Include="FluentValidation" Version="11.9.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>

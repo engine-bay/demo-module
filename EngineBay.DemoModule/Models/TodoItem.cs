@@ -1,7 +1,7 @@
 namespace EngineBay.DemoModule
 {
     using System;
-    using EngineBay.Core;
+    using EngineBay.Persistence;
     using Humanizer;
     using Microsoft.EntityFrameworkCore;
 

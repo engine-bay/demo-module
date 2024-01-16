@@ -4,6 +4,12 @@ namespace EngineBay.DemoModule
 
     public class TodoListDto
     {
+        public TodoListDto()
+        {
+            this.Id = Guid.Empty;
+            this.Name = string.Empty;
+        }
+
         public TodoListDto(TodoList todoList)
         {
             ArgumentNullException.ThrowIfNull(todoList);

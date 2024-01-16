@@ -2,6 +2,14 @@ namespace EngineBay.DemoModule
 {
     public class TodoItemDto
     {
+        public TodoItemDto()
+        {
+            this.Id = Guid.Empty;
+            this.Name = string.Empty;
+            this.ListId = Guid.Empty;
+            this.Completed = false;
+        }
+
         public TodoItemDto(TodoItem todoItem)
         {
             ArgumentNullException.ThrowIfNull(todoItem);

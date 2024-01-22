@@ -15,7 +15,7 @@
                 async (CreateTodoItem handler, CreateTodoItemDto createTodoItemDto, CancellationToken cancellation) =>
                 {
                     var result = await handler.Handle(createTodoItemDto, cancellation);
-                    return Results.Created($"{TodoItemEndpoints.ItemBasePath}/{result.Id}", result);
+                    return Results.Created($"{ItemBasePath}/{result.Id}", result);
                 })
                 .WithTags(TodoItemTags);
 

@@ -7,18 +7,23 @@ namespace EngineBay.DemoModule
     {
         private readonly DemoModuleWriteDbContext demoModuleDb;
         private readonly IValidator<UpdateTodoItemCommand> validator;
+        private readonly ILogger<UpdateTodoItem> logger;
 
         public UpdateTodoItem(
             DemoModuleWriteDbContext demoModuleDb,
-            IValidator<UpdateTodoItemCommand> validator)
+            IValidator<UpdateTodoItemCommand> validator,
+            ILogger<UpdateTodoItem> logger)
         {
             this.demoModuleDb = demoModuleDb;
             this.validator = validator;
+            this.logger = logger;
         }
 
         public async Task<TodoItemDto> Handle(UpdateTodoItemCommand updateTodoItemCommand, CancellationToken cancellation)
         {
             ArgumentNullException.ThrowIfNull(updateTodoItemCommand);
+
+            this.logger.UpdateTodoItem(updateTodoItemCommand.Id);
 
             this.validator.ValidateAndThrow(updateTodoItemCommand);
 

@@ -32,6 +32,9 @@ namespace EngineBay.DemoModule
             // register persistence services
             var databaseConfiguration = new CQRSDatabaseConfiguration<DemoModuleDbContext, DemoModuleQueryDbContext, DemoModuleWriteDbContext>();
             databaseConfiguration.RegisterDatabases(services);
+
+            // Register metrics
+            // services.AddSingleton<MetricsDefinitions>();
             return services;
         }
 

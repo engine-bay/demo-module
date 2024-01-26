@@ -11,15 +11,19 @@
     public class QueryTodoItem : PaginatedQuery<TodoItem>, IQueryHandler<DynamicFilteredPaginationParameters, PaginatedDto<TodoItemDto>>
     {
         private readonly DemoModuleQueryDbContext dbContext;
+        private readonly ILogger<QueryTodoItem> logger;
 
-        public QueryTodoItem(DemoModuleQueryDbContext dbContext)
+        public QueryTodoItem(DemoModuleQueryDbContext dbContext, ILogger<QueryTodoItem> logger)
         {
             this.dbContext = dbContext;
+            this.logger = logger;
         }
 
         public async Task<PaginatedDto<TodoItemDto>> Handle(DynamicFilteredPaginationParameters query, CancellationToken cancellation)
         {
             ArgumentNullException.ThrowIfNull(query);
+
+            this.logger.QueryTodoItems();
 
             var items = this.dbContext.TodoItems.AsExpandable();
             var format = new DateTimeFormatInfo();

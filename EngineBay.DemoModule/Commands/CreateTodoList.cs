@@ -23,14 +23,14 @@ namespace EngineBay.DemoModule
         {
             ArgumentNullException.ThrowIfNull(createTodoListDto);
 
-            this.logger.NewTodoList(createTodoListDto.Name);
-
             this.validator.ValidateAndThrow(createTodoListDto);
 
             var todoList = new TodoList(createTodoListDto.Name)
             {
                 Description = createTodoListDto.Description,
             };
+
+            this.logger.NewTodoList(todoList.Id);
 
             await this.demoModuleDb.TodoLists.AddAsync(todoList, cancellation);
             await this.demoModuleDb.SaveChangesAsync(cancellation);

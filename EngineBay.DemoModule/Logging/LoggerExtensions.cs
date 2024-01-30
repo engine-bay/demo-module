@@ -4,15 +4,15 @@ namespace EngineBay.DemoModule
     // https://learn.microsoft.com/en-us/dotnet/core/extensions/high-performance-logging
     internal static class LoggerExtensions
     {
-        private static readonly Action<ILogger, string, Exception?> NewTodoItemValue = LoggerMessage.Define<string>(
+        private static readonly Action<ILogger, Guid, Exception?> NewTodoItemValue = LoggerMessage.Define<Guid>(
             logLevel: LogLevel.Debug,
             eventId: 1, // NB these eventIds must be unique per namespace
-            formatString: "Creating Todo Item named {Name}");
+            formatString: "Created Todo Item with ID {Id}");
 
-        private static readonly Action<ILogger, string, Exception?> NewTodoListValue = LoggerMessage.Define<string>(
+        private static readonly Action<ILogger, Guid, Exception?> NewTodoListValue = LoggerMessage.Define<Guid>(
             logLevel: LogLevel.Debug,
             eventId: 2,
-            formatString: "Creating Todo List named {Name}");
+            formatString: "Created Todo List with ID {Id}");
 
         private static readonly Action<ILogger, Guid, Exception?> DeleteTodoItemValue = LoggerMessage.Define<Guid>(
             logLevel: LogLevel.Debug,
@@ -54,14 +54,14 @@ namespace EngineBay.DemoModule
             eventId: 10,
             formatString: "Query Todo Lists");
 
-        public static void NewTodoItem(this ILogger logger, string itemName)
+        public static void NewTodoItem(this ILogger logger, Guid id)
         {
-            NewTodoItemValue(logger, itemName, null);
+            NewTodoItemValue(logger, id, null);
         }
 
-        public static void NewTodoList(this ILogger logger, string name)
+        public static void NewTodoList(this ILogger logger, Guid id)
         {
-            NewTodoListValue(logger, name, null);
+            NewTodoListValue(logger, id, null);
         }
 
         public static void DeleteTodoItem(this ILogger logger, Guid id)

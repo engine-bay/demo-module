@@ -23,8 +23,6 @@ namespace EngineBay.DemoModule
         {
             ArgumentNullException.ThrowIfNull(createTodoItemDto);
 
-            this.logger.NewTodoItem(createTodoItemDto.Name);
-
             this.validator.ValidateAndThrow(createTodoItemDto);
 
             var todoItem = new TodoItem(createTodoItemDto.Name, createTodoItemDto.ListId, false)
@@ -32,6 +30,8 @@ namespace EngineBay.DemoModule
                 Description = createTodoItemDto.Description,
                 DueDate = createTodoItemDto.DueDate,
             };
+
+            this.logger.NewTodoItem(todoItem.Id);
 
             await this.demoModuleDb.TodoItems.AddAsync(todoItem, cancellation);
             await this.demoModuleDb.SaveChangesAsync(cancellation);

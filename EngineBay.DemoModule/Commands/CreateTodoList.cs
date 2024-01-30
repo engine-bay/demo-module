@@ -7,13 +7,16 @@ namespace EngineBay.DemoModule
     {
         private readonly DemoModuleWriteDbContext demoModuleDb;
         private readonly IValidator<CreateOrUpdateTodoListDto> validator;
+        private readonly ILogger<CreateTodoList> logger;
 
         public CreateTodoList(
             DemoModuleWriteDbContext demoModuleDb,
-            IValidator<CreateOrUpdateTodoListDto> validator)
+            IValidator<CreateOrUpdateTodoListDto> validator,
+            ILogger<CreateTodoList> logger)
         {
             this.demoModuleDb = demoModuleDb;
             this.validator = validator;
+            this.logger = logger;
         }
 
         public async Task<TodoListDto> Handle(CreateOrUpdateTodoListDto createTodoListDto, CancellationToken cancellation)
@@ -26,6 +29,8 @@ namespace EngineBay.DemoModule
             {
                 Description = createTodoListDto.Description,
             };
+
+            this.logger.NewTodoList(todoList.Id);
 
             await this.demoModuleDb.TodoLists.AddAsync(todoList, cancellation);
             await this.demoModuleDb.SaveChangesAsync(cancellation);

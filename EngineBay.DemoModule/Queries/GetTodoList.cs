@@ -1,6 +1,7 @@
 ﻿namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
+    using EngineBay.Telemetry;
     using Microsoft.EntityFrameworkCore;
 
     public class GetTodoList : IQueryHandler<Guid, TodoListDto>
@@ -16,6 +17,8 @@
 
         public async Task<TodoListDto> Handle(Guid query, CancellationToken cancellation)
         {
+            using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Handler + DemoActivityNameConstants.TodoListGet);
+
             this.logger.GetTodoList(query);
 
             var todoList = await this.demoModuleDb.TodoLists.Include(x => x.TodoItems).FirstOrDefaultAsync(x => x.Id == query, cancellation) ?? throw new NotFoundException($"No TodoList with Id ${query} found.");

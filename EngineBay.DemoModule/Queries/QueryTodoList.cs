@@ -5,6 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using EngineBay.Core;
+    using EngineBay.Telemetry;
     using LinqKit;
     using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,8 @@
 
         public async Task<PaginatedDto<TodoListDto>> Handle(DynamicFilteredPaginationParameters query, CancellationToken cancellation)
         {
+            using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Handler + DemoActivityNameConstants.TodoListQuery);
+
             ArgumentNullException.ThrowIfNull(query);
 
             this.logger.QueryTodoLists();

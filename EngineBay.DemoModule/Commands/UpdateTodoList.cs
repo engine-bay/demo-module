@@ -1,6 +1,7 @@
 namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
+    using EngineBay.Telemetry;
     using FluentValidation;
 
     public class UpdateTodoList : ICommandHandler<UpdateTodoListCommand, TodoListDto>
@@ -21,6 +22,8 @@ namespace EngineBay.DemoModule
 
         public async Task<TodoListDto> Handle(UpdateTodoListCommand updateTodoListCommand, CancellationToken cancellation)
         {
+            using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Handler + DemoActivityNameConstants.TodoListUpdate);
+
             ArgumentNullException.ThrowIfNull(updateTodoListCommand);
 
             this.logger.UpdateTodoList(updateTodoListCommand.Id);

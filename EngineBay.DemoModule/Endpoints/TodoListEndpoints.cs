@@ -1,6 +1,7 @@
 ﻿namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
+    using EngineBay.Telemetry;
 
     public static class TodoListEndpoints
     {
@@ -14,6 +15,8 @@
                 ListBasePath,
                 async (CreateTodoList handler, CreateOrUpdateTodoListDto createTodoListDto, CancellationToken cancellation) =>
                 {
+                    using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Endpoint + DemoActivityNameConstants.TodoListCreate);
+
                     var result = await handler.Handle(createTodoListDto, cancellation);
                     return Results.Created($"{ListBasePath}/{result.Id}", result);
                 })
@@ -23,6 +26,8 @@
                 ListBasePath,
                 async (QueryTodoList query, int? skip, int? limit, string? sortBy, SortOrderType? sortOrder, string?[] filters, CancellationToken cancellation) =>
                 {
+                    using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Endpoint + DemoActivityNameConstants.TodoListQuery);
+
                     var paginationParameters = new DynamicFilteredPaginationParameters(skip, limit, sortBy, sortOrder, filters);
 
                     var paginatedDtos = await query.Handle(paginationParameters, cancellation);
@@ -34,6 +39,8 @@
                 ListBasePath + "/{id:guid}",
                 async (GetTodoList handler, Guid id, CancellationToken cancellation) =>
                 {
+                    using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Endpoint + DemoActivityNameConstants.TodoListGet);
+
                     var result = await handler.Handle(id, cancellation);
                     return Results.Ok(result);
                 })
@@ -43,6 +50,8 @@
                 ListBasePath + "/{id:guid}",
                 async (UpdateTodoList handler, CreateOrUpdateTodoListDto updateTodoListDto, Guid id, CancellationToken cancellation) =>
                 {
+                    using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Endpoint + DemoActivityNameConstants.TodoListUpdate);
+
                     var command = new UpdateTodoListCommand(id, updateTodoListDto.Name)
                     {
                         Description = updateTodoListDto.Description,
@@ -56,6 +65,8 @@
                 ListBasePath + "/{id:guid}",
                 async (DeleteTodoList handler, Guid id, CancellationToken cancellation) =>
                 {
+                    using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Endpoint + DemoActivityNameConstants.TodoListDelete);
+
                     var result = await handler.Handle(id, cancellation);
                     return Results.Ok(result);
                 })

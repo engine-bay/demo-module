@@ -1,6 +1,7 @@
 ﻿namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
+    using EngineBay.Telemetry;
 
     public static class TodoItemEndpoints
     {
@@ -14,6 +15,8 @@
                 ItemBasePath,
                 async (CreateTodoItem handler, CreateTodoItemDto createTodoItemDto, CancellationToken cancellation) =>
                 {
+                    using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Endpoint + DemoActivityNameConstants.TodoItemCreate);
+
                     var result = await handler.Handle(createTodoItemDto, cancellation);
                     return Results.Created($"{ItemBasePath}/{result.Id}", result);
                 })
@@ -23,6 +26,8 @@
                 ItemBasePath,
                 async (QueryTodoItem handler, int? skip, int? limit, string? sortBy, SortOrderType? sortOrder, string?[] filters, CancellationToken cancellation) =>
                 {
+                    using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Endpoint + DemoActivityNameConstants.TodoItemQuery);
+
                     var dynamicFilteredPaginationParameters = new DynamicFilteredPaginationParameters(skip, limit, sortBy, sortOrder, filters);
 
                     var paginatedDtos = await handler.Handle(dynamicFilteredPaginationParameters, cancellation);
@@ -34,6 +39,8 @@
                 ItemBasePath + "/{id:guid}",
                 async (GetTodoItem handler, Guid id, CancellationToken cancellation) =>
                 {
+                    using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Endpoint + DemoActivityNameConstants.TodoItemGet);
+
                     var result = await handler.Handle(id, cancellation);
                     return Results.Ok(result);
                 })
@@ -43,6 +50,8 @@
                 ItemBasePath + "/{id:guid}",
                 async (UpdateTodoItem handler, UpdateTodoItemDto updateTodoItemDto, Guid id, CancellationToken cancellation) =>
                 {
+                    using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Endpoint + DemoActivityNameConstants.TodoItemUpdate);
+
                     var command = new UpdateTodoItemCommand(id, updateTodoItemDto.Name, updateTodoItemDto.ListId, updateTodoItemDto.Completed)
                     {
                         Description = updateTodoItemDto.Description,
@@ -57,6 +66,8 @@
                 ItemBasePath + "/{id:guid}",
                 async (DeleteTodoItem handler, Guid id, CancellationToken cancellation) =>
                 {
+                    using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Endpoint + DemoActivityNameConstants.TodoItemDelete);
+
                     var result = await handler.Handle(id, cancellation);
                     return Results.Ok(result);
                 })

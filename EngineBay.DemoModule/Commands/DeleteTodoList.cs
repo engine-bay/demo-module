@@ -1,6 +1,7 @@
 namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
+    using EngineBay.Telemetry;
 
     public class DeleteTodoList : ICommandHandler<Guid, TodoListDto>
     {
@@ -15,6 +16,8 @@ namespace EngineBay.DemoModule
 
         public async Task<TodoListDto> Handle(Guid id, CancellationToken cancellation)
         {
+            using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Handler + DemoActivityNameConstants.TodoListDelete);
+
             this.logger.DeleteTodoList(id);
 
             var todoList = await this.demoModuleDb.TodoLists.FindAsync(new object[] { id }, cancellation) ?? throw new NotFoundException($"No TodoList with Id ${id} found.");

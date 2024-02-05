@@ -1,6 +1,7 @@
 namespace EngineBay.DemoModule
 {
     using EngineBay.Core;
+    using EngineBay.Telemetry;
     using FluentValidation;
 
     public class CreateTodoItem : ICommandHandler<CreateTodoItemDto, TodoItemDto>
@@ -21,6 +22,8 @@ namespace EngineBay.DemoModule
 
         public async Task<TodoItemDto> Handle(CreateTodoItemDto createTodoItemDto, CancellationToken cancellation)
         {
+            using var activity = EngineBayActivitySource.Source.StartActivity(TracingActivityNameConstants.Handler + DemoActivityNameConstants.TodoItemCreate);
+
             ArgumentNullException.ThrowIfNull(createTodoItemDto);
 
             this.validator.ValidateAndThrow(createTodoItemDto);

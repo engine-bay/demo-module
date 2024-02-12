@@ -3,7 +3,6 @@ namespace EngineBay.DemoModule
     using EngineBay.Core;
     using EngineBay.Persistence;
     using FluentValidation;
-    using Microsoft.EntityFrameworkCore;
 
     public class DemoModuleModule : BaseModule, IDatabaseModule
     {
@@ -48,9 +47,11 @@ namespace EngineBay.DemoModule
             return app;
         }
 
-        public IReadOnlyCollection<IModuleDbContext> GetRegisteredDbContexts(DbContextOptions<ModuleWriteDbContext> dbOptions)
+        public IReadOnlyCollection<IModuleDbContext> GetRegisteredDbContexts(IDbContextOptionsFactory dbContextOptionsFactory)
         {
-            return new IModuleDbContext[] { new DemoModuleDbContext(dbOptions) };
+            ArgumentNullException.ThrowIfNull(dbContextOptionsFactory);
+
+            return new IModuleDbContext[] { new DemoModuleDbContext(dbContextOptionsFactory.GetDbContextOptions<ModuleWriteDbContext>()) };
         }
     }
 }
